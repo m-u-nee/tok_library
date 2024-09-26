@@ -38,10 +38,12 @@ def initialize_tokenizer(tokenizer_path):
         bos_token="<|begin_of_text|>",
         eos_token="<|end_of_text|>",
         unk_token="[UNK]",
-        pad_token="[PAD]"
+        pad_token="[PAD]", 
+        clean_up_tokenization_spaces=False  # Disable token space cleanup
+
     )
 
-def process_data(data_file, tokenizer, print_options):
+def process_data(data_file, tokenizer, print_options, return_options=None, max_rows=None):
     """
     Processes the tokenized data, decodes it, and optionally prints results.
     
@@ -49,45 +51,82 @@ def process_data(data_file, tokenizer, print_options):
         data_file (str): Path to the data file.
         tokenizer (PreTrainedTokenizerFast): Tokenizer object for decoding.
         print_options (dict): Dictionary with options for printing outputs.
+        return_options (dict): Dictionary with options for what to return. Default returns everything.
         
     Returns:
-        list: Processed results for each decoded input.
+        list or dict: Processed results based on return_options.
     """
+    # Default return options
+    if return_options is None:
+        return_options = {
+            "input_ids": True,
+            "tokens": True,
+            "tokens_post": True,
+            "text": True
+        }
+        
+    # Check if all print options are False, to avoid unnecessary processing
+    if not any(print_options.values()):
+        print_flag = False
+    else:
+        print_flag = True
+        
     results = []
     for i, input_ids in enumerate(read_tokenized_data(data_file)):
+         
+        result = {}
+
+        # Decode only if required by return_options
+        if return_options.get("text", False):
+            text = tokenizer.decode(input_ids)
+            result["text"] = text
         
-
-        text = tokenizer.decode(input_ids)
-        tokens = tokenizer.convert_ids_to_tokens(input_ids)
-        input_ids_post = tokenizer.encode(text, return_tensors="pt")
-        tokens_post = tokenizer.convert_ids_to_tokens(input_ids_post[0])
-
-        if print_options.get("print_input_ids", False):
-            print("Original token IDs:", input_ids)
+        # Process tokens if requested in return_options
+        if return_options.get("tokens", False):
+            tokens = tokenizer.convert_ids_to_tokens(input_ids)
+            result["tokens"] = tokens
         
-        if print_options.get("print_tokens", False):
-            print("Tokens:", tokens)
+        # Process post-encoded input IDs and tokens if requested
+        if return_options.get("tokens_post", False) or print_flag:
+            input_ids_post = tokenizer.encode(result.get("text", ""), return_tensors="pt")
+            tokens_post = tokenizer.convert_ids_to_tokens(input_ids_post[0])
+            if return_options.get("tokens_post", False):
+                result["tokens_post"] = tokens_post
         
-        if print_options.get("print_tokens_post", False):
-            print("Tokens after re-encoding:", tokens_post)
+        # Store input_ids if requested
+        if return_options.get("input_ids", False):
+            result["input_ids"] = input_ids
         
-        if print_options.get("print_decoded_text", False):
-            print("Decoded text:", text)
+        # Append results
+        results.append(result)
 
-        if print_options.get("print_lengths", False):
-            print("Length of original token IDs:", len(input_ids))
-            print("Length of re-encoded token IDs:", len(input_ids_post[0]))
-            print("Number of words in decoded text:", len(text.split(' ')))
+        # Handle printing logic if required
+        if print_flag:
+            if print_options.get("print_input_ids", False):
+                print("Original token IDs:", input_ids)
+            
+            if print_options.get("print_tokens", False):
+                print("Tokens:", tokens)
+            
+            if print_options.get("print_tokens_post", False):
+                print("Tokens after re-encoding:", tokens_post)
+            
+            if print_options.get("print_decoded_text", False):
+                print("Decoded text:", text)
 
-        results.append({
-            "input_ids": input_ids,
-            "tokens": tokens,
-            "tokens_post": tokens_post,
-            "text": text
-        })
+            if print_options.get("print_lengths", False):
+                print("Length of original token IDs:", len(input_ids))
+                print("Length of re-encoded token IDs:", len(input_ids_post[0]))
+                print("Number of words in decoded text:", len(text.split(' ')))
 
-        print('\n-------------------\n')
+            print('\n-------------------\n')
+        if max_rows is not None and i >= max_rows:
+            break
     
+    # Return results based on return options
+    if len(return_options) == 1 and return_options.get("text", False):
+        # Return only the text if that's all that's requested
+        return [result["text"] for result in results]
     return results
 
 # Example usage for actual script running
