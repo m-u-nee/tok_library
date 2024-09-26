@@ -55,8 +55,7 @@ def process_data(data_file, tokenizer, print_options):
     """
     results = []
     for i, input_ids in enumerate(read_tokenized_data(data_file)):
-        if i == 3:
-            break
+        
 
         text = tokenizer.decode(input_ids)
         tokens = tokenizer.convert_ids_to_tokens(input_ids)
