@@ -93,8 +93,8 @@ def process_data(data_file, tokenizer, print_options):
 
 # Example usage for actual script running
 if __name__ == "__main__":
-    tokenizer_path = '/Users/mattia/Desktop/pleias/rag_data_exploration/tokenizer'
-    data_file = '/Users/mattia/Desktop/pleias/rag_data_exploration/processed_output/00000_00000_shuffled.ds'
+    tokenizer_path = os.path.join(current_dir, '..', 'data', 'tokenizer', 'tokenizer.json')
+    data_file = os.path.join(current_dir, '..', 'processed_output', '00000_00000_shuffled.ds')
 
     # Initialize tokenizer
     tokenizer = initialize_tokenizer(tokenizer_path)

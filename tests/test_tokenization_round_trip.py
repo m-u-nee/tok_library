@@ -5,6 +5,8 @@ from src.inspect_binary import initialize_tokenizer, process_data
 from src.preprocess_data import preprocess_data_main
 import pandas as pd
 
+""" run with python -m unittest tests/test_tokenization_round_trip.py """
+"""This test is for the round trip of tokenization. It tokenizes the data, then decodes it back to text and compares it with the original text."""
 
 class TestTokenizationRoundTrip(unittest.TestCase):
     def setUp(self):
@@ -19,7 +21,7 @@ class TestTokenizationRoundTrip(unittest.TestCase):
             n_workers=-1,
             shuffle=False,
             tokenizer_batch_size=100,
-            reader="parquet",  # Simulating a Hugging Face reader
+            reader="parquet", 
             dataset=os.path.join(current_dir, 'test_data', 'random_row.parquet'),
             column="text",
             split="train",
@@ -28,17 +30,14 @@ class TestTokenizationRoundTrip(unittest.TestCase):
             partition=None,
             qos=None,
             time="20:00:00",
-            email='mattia.u.nee@gmail.com',
+            email=None,
             cpus_per_task=1,
             mem_per_cpu_gb=2
         )
 
-        # Initialize tokenizer
-        self.tokenizer_path = os.path.join(current_dir, '..', 'data', 'tokenizer')
+        self.tokenizer_path = self.args.tokenizer_name_or_path
         self.tokenizer = initialize_tokenizer(self.tokenizer_path)
-
-        # File for tokenized data
-        self.data_file = os.path.join(current_dir, '..', 'processed_output', '00000_00000_shuffled.ds')
+        self.processed_data_path = os.path.join(self.args.output_folder, "00000_unshuffled.ds")
 
     def test_round_trip(self):
         # Step 1: Tokenize with preprocess_data_main
@@ -53,9 +52,8 @@ class TestTokenizationRoundTrip(unittest.TestCase):
             "print_decoded_text": True,
             "print_lengths": True
         }
-        tokenizer = initialize_tokenizer(self.tokenizer_path)
-        processed_data_path = os.path.join(self.args.output_folder, "00000_unshuffled.ds")
-        results = process_data(processed_data_path, tokenizer, print_options)
+        
+        results = process_data(self.processed_data_path, self.tokenizer, print_options)
 
         # Step 3: Compare the original text with the decoded text. The original text is the first row of the parquet file, under column 'text'
         

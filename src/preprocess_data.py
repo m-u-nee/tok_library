@@ -138,4 +138,4 @@ def preprocess_data_main(args):
 
 if __name__ == "__main__":
     _args = get_args()
-    preprocess_main(_args)
+    preprocess_data_main(_args)
