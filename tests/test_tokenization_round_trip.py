@@ -1,3 +1,4 @@
+import os
 import unittest
 from argparse import Namespace
 from src.inspect_binary import initialize_tokenizer, process_data
@@ -8,17 +9,18 @@ import pandas as pd
 class TestTokenizationRoundTrip(unittest.TestCase):
     def setUp(self):
         # Manually setting up the args that would normally come from the command line
+        current_dir = os.path.dirname(os.path.abspath(__file__))
         self.args = Namespace(
-            tokenizer_name_or_path='/Users/mattia/Desktop/pleias/rag_data_exploration/tokenizer/tokenizer.json',
+            tokenizer_name_or_path=os.path.join(current_dir, '..', 'data', 'tokenizer', 'tokenizer.json'),
             eos_token="<|end_of_text|>",
-            output_folder='/Users/mattia/Desktop/pleias/tok_library/tests/test_processed_output',
-            logging_dir='/Users/mattia/Desktop/pleias/tok_library/tests/test_processed_output',
+            output_folder=os.path.join(current_dir, 'test_processed_output'),
+            logging_dir=os.path.join(current_dir, 'test_processed_output'),
             n_tasks=1,
             n_workers=-1,
             shuffle=False,
             tokenizer_batch_size=100,
             reader="parquet",  # Simulating a Hugging Face reader
-            dataset="/Users/mattia/Desktop/pleias/tok_library/tests/test_data/random_row.parquet",
+            dataset=os.path.join(current_dir, 'test_data', 'random_row.parquet'),
             column="text",
             split="train",
             glob_pattern=None,
@@ -32,11 +34,11 @@ class TestTokenizationRoundTrip(unittest.TestCase):
         )
 
         # Initialize tokenizer
-        self.tokenizer_path = '/Users/mattia/Desktop/pleias/rag_data_exploration/tokenizer'
+        self.tokenizer_path = os.path.join(current_dir, '..', 'data', 'tokenizer')
         self.tokenizer = initialize_tokenizer(self.tokenizer_path)
 
         # File for tokenized data
-        self.data_file = '/Users/mattia/Desktop/pleias/rag_data_exploration/processed_output/00000_00000_shuffled.ds'
+        self.data_file = os.path.join(current_dir, '..', 'processed_output', '00000_00000_shuffled.ds')
 
     def test_round_trip(self):
         # Step 1: Tokenize with preprocess_data_main
@@ -52,7 +54,7 @@ class TestTokenizationRoundTrip(unittest.TestCase):
             "print_lengths": True
         }
         tokenizer = initialize_tokenizer(self.tokenizer_path)
-        processed_data_path = self.args.output_folder + "/00000_unshuffled.ds"
+        processed_data_path = os.path.join(self.args.output_folder, "00000_unshuffled.ds")
         results = process_data(processed_data_path, tokenizer, print_options)
 
         # Step 3: Compare the original text with the decoded text. The original text is the first row of the parquet file, under column 'text'
