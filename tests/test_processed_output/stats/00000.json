@@ -1,0 +1,42 @@
+[
+    {
+        "name": "\ud83d\udcd6 - READER: \ud83d\udcd2 Parquet",
+        "time_stats": {
+            "total": 9.854207746684551e-05,
+            "mean": 9.854207746684551e-05,
+            "unit": "batch",
+            "total_human": "0 seconds",
+            "mean_human": "0.10 milliseconds",
+            "std_dev_human": "0 milliseconds",
+            "min_human": "0.10 milliseconds",
+            "max_human": "0.10 milliseconds"
+        },
+        "stats": {
+            "input_files": 1,
+            "doc_len": {
+                "total": 6529,
+                "mean": 6529.0
+            },
+            "documents": 0
+        }
+    },
+    {
+        "name": "\ud83d\udd22 - TOKENIZER: \u270d\ufe0f Writer",
+        "time_stats": {
+            "total": 0.005012459005229175,
+            "mean": 0.005012459005229175,
+            "unit": "batch",
+            "total_human": "0 seconds",
+            "mean_human": "5.01 milliseconds",
+            "std_dev_human": "0 milliseconds",
+            "min_human": "5.01 milliseconds",
+            "max_human": "5.01 milliseconds"
+        },
+        "stats": {
+            "tokens": {
+                "total": 1500,
+                "mean": 1500.0
+            }
+        }
+    }
+]
