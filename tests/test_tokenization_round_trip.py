@@ -4,8 +4,13 @@ from argparse import Namespace
 from src.inspect_binary import initialize_tokenizer, process_data
 from src.preprocess_data import preprocess_data_main
 import pandas as pd
-import glob
 import shutil
+import difflib
+import logging
+
+# Configure logging
+logging.basicConfig(filename='tests/test_log.log', level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 """ run with python -m unittest tests/test_tokenization_round_trip.py """
 """This test is for the round trip of tokenization. It tokenizes the data, then decodes it back to text and compares it with the original text."""
@@ -24,7 +29,7 @@ class TestTokenizationRoundTrip(unittest.TestCase):
             shuffle=False,
             tokenizer_batch_size=100,
             reader="parquet", 
-            dataset=os.path.join(current_dir, 'test_data', 'random_row.parquet'),
+            dataset='/Users/mattia/Desktop/pleias/tok_library/data/ItalianPD_1.parquet',  # Ideally, this should be configurable
             column="text",
             split="train",
             glob_pattern=None,
@@ -41,8 +46,10 @@ class TestTokenizationRoundTrip(unittest.TestCase):
         self.tokenizer = initialize_tokenizer(self.tokenizer_path)
         self.processed_data_path = os.path.join(self.args.output_folder, "00000_unshuffled.ds")
 
-
-
+    def show_diff(self, text1, text2):
+        diff = difflib.ndiff(text1.splitlines(), text2.splitlines())
+        diff_output = '\n'.join(diff)
+        logger.error("Differences between original and decoded text:\n%s", diff_output)
 
     def clean_directory(self, directory):
         # Get all subdirectories and files in the directory and remove them
@@ -56,12 +63,10 @@ class TestTokenizationRoundTrip(unittest.TestCase):
                     # Remove the file
                     os.remove(item_path)
             except Exception as e:
-                print(f"Error removing {item_path}: {e}")
-
+                logger.error(f"Error removing {item_path}: {e}")
 
     def test_round_trip(self):
         # Step 1: Tokenize with preprocess_data_main
-        # Runs the tokenization process with the args
         preprocess_data_main(self.args)
 
         # Step 2: Convert the tokenized data back to text
@@ -82,21 +87,24 @@ class TestTokenizationRoundTrip(unittest.TestCase):
         original_text = df[self.args.column].iloc[0].strip()
 
         # Get the decoded text
-        decoded_text = results[0]['text'].strip()
+        decoded_text = results[0]['text']
         
         # Remove all special tokens from the decoded text
         for special_token in self.tokenizer.all_special_tokens:
             decoded_text = decoded_text.replace(special_token, "").strip()
 
         # Step 4: Compare the stripped original and decoded text
-        self.assertEqual(original_text, decoded_text)
+        try:
+            self.assertEqual(original_text, decoded_text)
+        except AssertionError:
+            self.show_diff(original_text, decoded_text)
+            raise  # Re-raise the AssertionError after showing the diff
+        finally:
+            # Step 5: Clean up the processed data, optional
+            remove_processed_data = True
+            if remove_processed_data:
+                self.clean_directory(self.args.output_folder)
+                self.clean_directory(self.args.logging_dir)
 
-        # Step 5: Clean up the processed data, optional
-        remove_processed_data = True
-        if remove_processed_data:
-            self.clean_directory(self.args.output_folder)
-            self.clean_directory(self.args.logging_dir)
-        
-        
 if __name__ == "__main__":
     unittest.main()
