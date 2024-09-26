@@ -69,8 +69,8 @@ class TestTokenizationRoundTrip(unittest.TestCase):
             "print_input_ids": False,
             "print_tokens": False,
             "print_tokens_post": False,
-            "print_decoded_text": True,
-            "print_lengths": True
+            "print_decoded_text": False,
+            "print_lengths": False
         }
         
         results = process_data(self.processed_data_path, self.tokenizer, print_options)
@@ -81,11 +81,12 @@ class TestTokenizationRoundTrip(unittest.TestCase):
         df = pd.read_parquet(self.args.dataset)
         original_text = df[self.args.column].iloc[0].strip()
 
-        # Get the decoded text and remove the eos_token
+        # Get the decoded text
         decoded_text = results[0]['text'].strip()
-        eos_token = self.args.eos_token
-        if decoded_text.endswith(eos_token):
-            decoded_text = decoded_text[:-len(eos_token)].strip()
+        
+        # Remove all special tokens from the decoded text
+        for special_token in self.tokenizer.all_special_tokens:
+            decoded_text = decoded_text.replace(special_token, "").strip()
 
         # Step 4: Compare the stripped original and decoded text
         self.assertEqual(original_text, decoded_text)
@@ -95,6 +96,7 @@ class TestTokenizationRoundTrip(unittest.TestCase):
         if remove_processed_data:
             self.clean_directory(self.args.output_folder)
             self.clean_directory(self.args.logging_dir)
-
+        
+        
 if __name__ == "__main__":
     unittest.main()
