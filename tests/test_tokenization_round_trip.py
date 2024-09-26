@@ -4,6 +4,8 @@ from argparse import Namespace
 from src.inspect_binary import initialize_tokenizer, process_data
 from src.preprocess_data import preprocess_data_main
 import pandas as pd
+import glob
+import shutil
 
 """ run with python -m unittest tests/test_tokenization_round_trip.py """
 """This test is for the round trip of tokenization. It tokenizes the data, then decodes it back to text and compares it with the original text."""
@@ -39,6 +41,24 @@ class TestTokenizationRoundTrip(unittest.TestCase):
         self.tokenizer = initialize_tokenizer(self.tokenizer_path)
         self.processed_data_path = os.path.join(self.args.output_folder, "00000_unshuffled.ds")
 
+
+
+
+    def clean_directory(self, directory):
+        # Get all subdirectories and files in the directory and remove them
+        for item in os.listdir(directory):
+            item_path = os.path.join(directory, item)
+            try:
+                if os.path.isdir(item_path):
+                    # Recursively delete the folder and all its contents
+                    shutil.rmtree(item_path)
+                else:
+                    # Remove the file
+                    os.remove(item_path)
+            except Exception as e:
+                print(f"Error removing {item_path}: {e}")
+
+
     def test_round_trip(self):
         # Step 1: Tokenize with preprocess_data_main
         # Runs the tokenization process with the args
@@ -70,6 +90,11 @@ class TestTokenizationRoundTrip(unittest.TestCase):
         # Step 4: Compare the stripped original and decoded text
         self.assertEqual(original_text, decoded_text)
 
+        # Step 5: Clean up the processed data, optional
+        remove_processed_data = True
+        if remove_processed_data:
+            self.clean_directory(self.args.output_folder)
+            self.clean_directory(self.args.logging_dir)
 
 if __name__ == "__main__":
     unittest.main()

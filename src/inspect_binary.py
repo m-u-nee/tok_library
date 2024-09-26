@@ -34,7 +34,7 @@ def initialize_tokenizer(tokenizer_path):
         PreTrainedTokenizerFast: Loaded tokenizer.
     """
     return PreTrainedTokenizerFast(
-        tokenizer_file=os.path.join(tokenizer_path, "tokenizer.json"),
+        tokenizer_file=os.path.join(tokenizer_path),
         bos_token="<|begin_of_text|>",
         eos_token="<|end_of_text|>",
         unk_token="[UNK]",
@@ -93,6 +93,7 @@ def process_data(data_file, tokenizer, print_options):
 
 # Example usage for actual script running
 if __name__ == "__main__":
+    current_dir = os.path.dirname(os.path.realpath(__file__))
     tokenizer_path = os.path.join(current_dir, '..', 'data', 'tokenizer', 'tokenizer.json')
     data_file = os.path.join(current_dir, '..', 'processed_output', '00000_00000_shuffled.ds')
 
