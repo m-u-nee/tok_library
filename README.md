@@ -1,10 +1,3 @@
-1. **Update to `preprocess_data.py` description**: You now use a YAML config file to set parameters for `preprocess_data.py`. Also, you handle both local and Slurm-based execution with more configuration options.
-
-2. **Update to `inspect_binary.py` description**: The tokenizer path and the data inspection process are configurable, with more detailed print options.
-
-3. **Update to `test_tokenization_round_trip.py` description**: The unit test script is heavily reliant on YAML configuration, and now logs errors with more detail using a logger.
-
-Here is the updated version of your `README`:
 
 ---
 
