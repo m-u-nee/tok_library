@@ -26,7 +26,7 @@ USER_CONFIG = {
         "print_decoded_text": False,
         "print_lengths": False
     },  # Options for printing the decoded results. Set to False to disable printing.
-    "remove_processed_data_after_test": False  # Remove the processed data after the test is completed.
+    "remove_processed_data_after_test": True  # Remove the processed data after the test is completed.
 }
 
 
