@@ -14,13 +14,16 @@ Key components of the project:
 
 ## **Project Structure**
 
-- **data/**: Contains dataset files and the tokenizer configuration (e.g., `tokenizer.json`).
-- **src/**: Main scripts for preprocessing and inspecting tokenized data.
-- **tests/**: Unit tests to ensure that tokenization works correctly.
+- **`src/tok_library/`**: Main code for preprocessing and inspecting tokenized data.
+  - **`data/`**: Contains tokenizer configuration files (e.g., `tokenizer.json`) and is the location for datasets (if used locally).
+  - **`preprocess_data.py`**: Script for data preprocessing and tokenization.
+  - **`inspect_binary.py`**: Script for inspecting and verifying tokenized data.
+- **`tests/`**: Unit tests to ensure that tokenization and preprocessing work correctly.
+  - **`test_tokenization_round_trip.py`**: Ensures that the tokenization process can round-trip (tokenize and decode back to original text) without errors.
 
-Ensure the `data/tokenizer` folder contains the necessary tokenizer files, such as `tokenizer.json`.
+Ensure the `src/tok_library/data/` folder contains the necessary tokenizer files, such as `tokenizer.json`.
 
----
+----------------
 
 ## **Usage**
 
