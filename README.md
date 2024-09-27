@@ -1,5 +1,3 @@
-Your `README` requires the following updates based on the code changes you provided:
-
 1. **Update to `preprocess_data.py` description**: You now use a YAML config file to set parameters for `preprocess_data.py`. Also, you handle both local and Slurm-based execution with more configuration options.
 
 2. **Update to `inspect_binary.py` description**: The tokenizer path and the data inspection process are configurable, with more detailed print options.
@@ -94,6 +92,3 @@ python -m unittest -v tests/test_tokenization_round_trip.py
 
 The script will process a specified number of rows, log any inconsistencies, and (optionally) remove the processed data after the test is complete. Configure options like `num_rows_to_process` in the `USER_CONFIG` dictionary within the test file.
 
----
-
-This README now reflects the changes to your code. If you have additional changes in the future, don't forget to revisit this document.
