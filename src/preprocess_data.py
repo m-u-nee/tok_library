@@ -145,5 +145,5 @@ def preprocess_data_main(config_path):
 
 if __name__ == "__main__":
     # Load configuration from a YAML file
-    config_file_path = "config.yml"
+    config_file_path = "preprocess_data_config.yml"
     preprocess_data_main(config_file_path)
