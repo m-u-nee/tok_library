@@ -1,14 +1,33 @@
 import os
 import unittest
 import yaml
-from src.inspect_binary import initialize_tokenizer, process_data
+from src.inspect_binary import load_tokenizer, process_tokenized_data
 from src.preprocess_data import preprocess_data_main
 import pandas as pd
 import shutil
 import difflib
 import logging
 
+"""
+This script tests the round-trip tokenization process. It tokenizes a dataset, decodes the tokenized data back to text,
+and compares the original text with the decoded text. The test passes if all rows match.
+run with python -m unittest -v tests/test_tokenization_round_trip.py
+"""
 
+# USER CONFIGURATION
+USER_CONFIG = {
+    "config_file_path": '/Users/mattia/Desktop/pleias/tok_library/tests/test_config.yml',  # File path to the config file for preprocess_data_main.
+    "log_file_path": 'tests/test_log.log',  # Logs information during test, mostly errors if any occur for debugging
+    "num_rows_to_process": float("inf"),  # Number of rows to check. Set low for faster testing.
+    "print_options": {
+        "print_input_ids": False,
+        "print_tokens": False,
+        "print_tokens_post": False,
+        "print_decoded_text": False,
+        "print_lengths": False
+    },  # Options for printing the decoded results. Set to False to disable printing.
+    "remove_processed_data_after_test": False  # Remove the processed data after the test is completed.
+}
 
 
 def setup_logger(log_file_path):
@@ -31,8 +50,7 @@ class TestTokenizationRoundTrip(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         """Set up the logger for the entire test class."""
-        cls.log_file_path = 'tests/test_log.log'
-        cls.logger = setup_logger(cls.log_file_path)
+        cls.logger = setup_logger(USER_CONFIG['log_file_path'])
 
     def setUp(self):
         """Set up test variables and paths."""
@@ -40,13 +58,13 @@ class TestTokenizationRoundTrip(unittest.TestCase):
         current_dir = os.path.dirname(os.path.abspath(__file__))
         
         # Load the configuration from the file
-        config_file_path = os.path.join(current_dir, 'test_config.yml')  # Change this to your actual config path
+        config_file_path = USER_CONFIG['config_file_path']
         self.config = load_config(config_file_path)
 
         # Set tokenizer and paths from the config
         print(f"Tokenizer path: {self.config['tokenizer_name_or_path']}")
-        self.tokenizer = initialize_tokenizer(self.config['tokenizer_name_or_path'])
-        print(f"Tokenizer initialized")
+        self.tokenizer = load_tokenizer(self.config['tokenizer_name_or_path'])
+        print("Tokenizer initialized")
         self.processed_data_path = os.path.join(self.config['output_folder'], "00000_unshuffled.ds")
 
     def show_diff(self, text1, text2):
@@ -56,36 +74,36 @@ class TestTokenizationRoundTrip(unittest.TestCase):
         self.logger.error("Differences between original and decoded text:\n%s", diff_output)
 
     def clean_directory(self, directory):
-        """Remove files and directories inside a given directory. This is used to clean up the processed data 
-        after the test is completed."""
-        for item in os.listdir(directory):
-            item_path = os.path.join(directory, item)
-            try:
+        """Remove files and directories inside a given directory."""
+        try:
+            for item in os.listdir(directory):
+                item_path = os.path.join(directory, item)
                 if os.path.isdir(item_path):
                     shutil.rmtree(item_path)
                 else:
                     os.remove(item_path)
-            except Exception as e:
-                self.logger.error(f"Error removing {item_path}: {e}")
+            self.logger.info(f"Successfully cleaned directory: {directory}")
+        except Exception as e:
+            self.logger.exception(f"Failed to clean directory {directory}: {e}")
+    
+    def clean_up_after_test(self):
+        """Clean up temporary test files. Comment out if you want to inspect the files."""
+        self.clean_directory(self.config['output_folder'])
+        self.clean_directory(self.config['logging_dir'])
 
+    
     def test_round_trip(self):
         """Test round-trip tokenization: original -> tokenized -> decoded."""
         # Step 1: Tokenize with preprocess_data_main
-        preprocess_data_main('/Users/mattia/Desktop/pleias/tok_library/tests/test_config.yml')  # Pass the config file path
+        preprocess_data_main(USER_CONFIG['config_file_path'])
         print("Tokenization complete")
 
         # Step 2: Decode the tokenized data back to text
-        print_options = {
-            "print_input_ids": False,
-            "print_tokens": False,
-            "print_tokens_post": False,
-            "print_decoded_text": False,
-            "print_lengths": False
-        }
-        num_rows_to_process = float("inf")
+        print_options = USER_CONFIG['print_options']
+        num_rows_to_process = USER_CONFIG['num_rows_to_process']
 
         # Process the data and decode back to text
-        results = process_data(
+        results = process_tokenized_data(
             self.processed_data_path,
             self.tokenizer,
             print_options,
@@ -125,15 +143,10 @@ class TestTokenizationRoundTrip(unittest.TestCase):
 
         # Step 6: Clean up processed data
         finally:
-            remove_processed_data_after_test = True
-            if remove_processed_data_after_test:
+            if USER_CONFIG['remove_processed_data_after_test']:
                 self.logger.info("Cleaning up processed data.")
                 self.clean_up_after_test()
 
-    def clean_up_after_test(self):
-        """Clean up temporary test files. Comment out if you want to inspect the files."""
-        self.clean_directory(self.config['output_folder'])
-        self.clean_directory(self.config['logging_dir'])
-
+    
 if __name__ == "__main__":
     unittest.main(buffer=True)
