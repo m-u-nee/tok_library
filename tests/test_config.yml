@@ -1,0 +1,24 @@
+tokenizer_name_or_path: /Users/mattia/Desktop/pleias/tok_library/data/tokenizer/tokenizer.json #  "../data/tokenizer/tokenizer.json"
+eos_token: "<|end_of_text|>"
+output_folder: "test_processed_data"
+logging_dir: "test_processed_data"
+n_tasks: 1
+n_workers: -1
+shuffle: false
+tokenizer_batch_size: 10
+
+# Dataset options
+reader: "parquet"
+dataset: "/Users/mattia/Desktop/pleias/tok_library/data/ItalianPD_1.parquet"
+column: "text"
+split: "train"
+glob_pattern: null
+
+# Slurm options
+slurm: false
+partition: null
+qos: null
+time: "20:00:00"
+email: null
+cpus_per_task: 1
+mem_per_cpu_gb: 2

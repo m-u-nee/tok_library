@@ -1,12 +1,15 @@
 import os
 import unittest
-from argparse import Namespace
+import yaml
 from src.inspect_binary import initialize_tokenizer, process_data
 from src.preprocess_data import preprocess_data_main
 import pandas as pd
 import shutil
 import difflib
 import logging
+
+
+
 
 def setup_logger(log_file_path):
     """Configures and clears the log file."""
@@ -15,6 +18,12 @@ def setup_logger(log_file_path):
     # Clear the log file
     open(log_file_path, 'w').close()
     return logger
+
+def load_config(config_file):
+    """Loads the configuration from a YAML file."""
+    with open(config_file, 'r') as file:
+        config = yaml.safe_load(file)
+    return config
 
 class TestTokenizationRoundTrip(unittest.TestCase):
     """Unit test for tokenization round-trip consistency."""
@@ -29,39 +38,26 @@ class TestTokenizationRoundTrip(unittest.TestCase):
         """Set up test variables and paths."""
         print("Setup is running")
         current_dir = os.path.dirname(os.path.abspath(__file__))
-        self.args = Namespace(
-            tokenizer_name_or_path=os.path.join(current_dir, '..', 'data', 'tokenizer', 'tokenizer.json'),
-            eos_token="<|end_of_text|>",
-            output_folder=os.path.join(current_dir, 'test_processed_data'),
-            logging_dir=os.path.join(current_dir, 'test_processed_data'),
-            n_tasks=1,
-            n_workers=-1,
-            shuffle=False,
-            tokenizer_batch_size=10,
-            reader="parquet",
-            dataset='/Users/mattia/Desktop/pleias/tok_library/data/ItalianPD_1.parquet',
-            column="text",
-            split="train",
-            glob_pattern=None,
-            slurm=False,
-            partition=None,
-            qos=None,
-            time="20:00:00",
-            email=None,
-            cpus_per_task=1,
-            mem_per_cpu_gb=2
-        )
-        self.tokenizer = initialize_tokenizer(self.args.tokenizer_name_or_path)
-        self.processed_data_path = os.path.join(self.args.output_folder, "00000_unshuffled.ds")
+        
+        # Load the configuration from the file
+        config_file_path = os.path.join(current_dir, 'test_config.yml')  # Change this to your actual config path
+        self.config = load_config(config_file_path)
+
+        # Set tokenizer and paths from the config
+        print(f"Tokenizer path: {self.config['tokenizer_name_or_path']}")
+        self.tokenizer = initialize_tokenizer(self.config['tokenizer_name_or_path'])
+        print(f"Tokenizer initialized")
+        self.processed_data_path = os.path.join(self.config['output_folder'], "00000_unshuffled.ds")
 
     def show_diff(self, text1, text2):
-        """Log the differences between two texts."""
+        """Log the differences between two texts in a human-readable format. This is called when a test fails."""
         diff = difflib.ndiff(text1.splitlines(), text2.splitlines())
         diff_output = '\n'.join(diff)
         self.logger.error("Differences between original and decoded text:\n%s", diff_output)
 
     def clean_directory(self, directory):
-        """Remove files and directories inside a given directory."""
+        """Remove files and directories inside a given directory. This is used to clean up the processed data 
+        after the test is completed."""
         for item in os.listdir(directory):
             item_path = os.path.join(directory, item)
             try:
@@ -75,7 +71,7 @@ class TestTokenizationRoundTrip(unittest.TestCase):
     def test_round_trip(self):
         """Test round-trip tokenization: original -> tokenized -> decoded."""
         # Step 1: Tokenize with preprocess_data_main
-        preprocess_data_main(self.args)
+        preprocess_data_main('/Users/mattia/Desktop/pleias/tok_library/tests/test_config.yml')  # Pass the config file path
         print("Tokenization complete")
 
         # Step 2: Decode the tokenized data back to text
@@ -98,7 +94,7 @@ class TestTokenizationRoundTrip(unittest.TestCase):
         )
 
         # Step 3: Load the original dataset
-        df = pd.read_parquet(self.args.dataset)
+        df = pd.read_parquet(self.config['dataset'])
         incorrect_rows = 0
         total_rows = min(len(df), num_rows_to_process)
 
@@ -109,7 +105,7 @@ class TestTokenizationRoundTrip(unittest.TestCase):
         for idx, row in df.iterrows():
             if idx >= num_rows_to_process:
                 break
-            original_text = row[self.args.column].strip()
+            original_text = row[self.config['column']].strip()
             decoded_text = results[idx].strip()
 
             # Remove special tokens from the decoded text
@@ -129,13 +125,15 @@ class TestTokenizationRoundTrip(unittest.TestCase):
 
         # Step 6: Clean up processed data
         finally:
-            self.logger.info("Cleaning up processed data.")
-            self.clean_up_after_test()
+            remove_processed_data_after_test = True
+            if remove_processed_data_after_test:
+                self.logger.info("Cleaning up processed data.")
+                self.clean_up_after_test()
 
     def clean_up_after_test(self):
         """Clean up temporary test files. Comment out if you want to inspect the files."""
-        self.clean_directory(self.args.output_folder)
-        self.clean_directory(self.args.logging_dir)
+        self.clean_directory(self.config['output_folder'])
+        self.clean_directory(self.config['logging_dir'])
 
 if __name__ == "__main__":
     unittest.main(buffer=True)
