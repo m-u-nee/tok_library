@@ -1,4 +1,5 @@
-data/*.parquet
+*.parquet 
+# This will ignore all .parquet files in the repository
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

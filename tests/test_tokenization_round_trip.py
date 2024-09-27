@@ -1,8 +1,8 @@
 import os
 import unittest
 import yaml
-from src.inspect_binary import load_tokenizer, process_tokenized_data
-from src.preprocess_data import preprocess_data_main
+from tok_library.inspect_binary import load_tokenizer, process_tokenized_data  # Updated path to reflect the project structure
+from tok_library.preprocess_data import preprocess_data_main  # Updated path
 import pandas as pd
 import shutil
 import difflib

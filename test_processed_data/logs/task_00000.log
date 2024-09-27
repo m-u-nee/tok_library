@@ -1,0 +1,134 @@
+2024-09-27 14:47:55.388 | INFO     | datatrove.utils.logging:add_task_logger:58 - Launching pipeline for rank=0
+2024-09-27 14:47:55.388 | INFO     | datatrove.utils.logging:log_pipeline:90 - 
+--- 🛠️ PIPELINE 🛠
+📖 - READER: 📒 Parquet
+🔢 - TOKENIZER: ✍️ Writer
+2024-09-27 14:47:55.388 | INFO     | datatrove.pipeline.tokens.tokenizer:run:389 - Tokenizing in "00000_unshuffled.ds"...
+2024-09-27 14:47:55.432 | ERROR    | datatrove.executor.base:_run_for_rank:108 - No files found on /Users/mattia/Desktop/pleias/tok_library/data/ItalianPD_1.parquet!
+Traceback (most recent call last):
+
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/Users/mattia/miniconda3/envs/general_ml/lib/python3.11/unittest/__main__.py", line 18, in <module>
+    main(module=None)
+    └ <class 'unittest.main.TestProgram'>
+  File "/Users/mattia/miniconda3/envs/general_ml/lib/python3.11/unittest/main.py", line 102, in __init__
+    self.runTests()
+    │    └ <function TestProgram.runTests at 0x102b6eac0>
+    └ <unittest.main.TestProgram object at 0x1026ce590>
+  File "/Users/mattia/miniconda3/envs/general_ml/lib/python3.11/unittest/main.py", line 274, in runTests
+    self.result = testRunner.run(self.test)
+    │             │          │   │    └ <unittest.suite.TestSuite tests=[<unittest.suite.TestSuite tests=[<unittest.suite.TestSuite tests=[<tests.test_tokenization_r...
+    │             │          │   └ <unittest.main.TestProgram object at 0x1026ce590>
+    │             │          └ <function TextTestRunner.run at 0x102b6e3e0>
+    │             └ <unittest.runner.TextTestRunner object at 0x13d0eb5d0>
+    └ <unittest.main.TestProgram object at 0x1026ce590>
+  File "/Users/mattia/miniconda3/envs/general_ml/lib/python3.11/unittest/runner.py", line 217, in run
+    test(result)
+    │    └ <unittest.runner.TextTestResult run=1 errors=0 failures=0>
+    └ <unittest.suite.TestSuite tests=[<unittest.suite.TestSuite tests=[<unittest.suite.TestSuite tests=[<tests.test_tokenization_r...
+  File "/Users/mattia/miniconda3/envs/general_ml/lib/python3.11/unittest/suite.py", line 84, in __call__
+    return self.run(*args, **kwds)
+           │    │    │       └ {}
+           │    │    └ (<unittest.runner.TextTestResult run=1 errors=0 failures=0>,)
+           │    └ <function TestSuite.run at 0x102b12ac0>
+           └ <unittest.suite.TestSuite tests=[<unittest.suite.TestSuite tests=[<unittest.suite.TestSuite tests=[<tests.test_tokenization_r...
+  File "/Users/mattia/miniconda3/envs/general_ml/lib/python3.11/unittest/suite.py", line 122, in run
+    test(result)
+    │    └ <unittest.runner.TextTestResult run=1 errors=0 failures=0>
+    └ <unittest.suite.TestSuite tests=[<unittest.suite.TestSuite tests=[<tests.test_tokenization_round_trip.TestTokenizationRoundTr...
+  File "/Users/mattia/miniconda3/envs/general_ml/lib/python3.11/unittest/suite.py", line 84, in __call__
+    return self.run(*args, **kwds)
+           │    │    │       └ {}
+           │    │    └ (<unittest.runner.TextTestResult run=1 errors=0 failures=0>,)
+           │    └ <function TestSuite.run at 0x102b12ac0>
+           └ <unittest.suite.TestSuite tests=[<unittest.suite.TestSuite tests=[<tests.test_tokenization_round_trip.TestTokenizationRoundTr...
+  File "/Users/mattia/miniconda3/envs/general_ml/lib/python3.11/unittest/suite.py", line 122, in run
+    test(result)
+    │    └ <unittest.runner.TextTestResult run=1 errors=0 failures=0>
+    └ <unittest.suite.TestSuite tests=[<tests.test_tokenization_round_trip.TestTokenizationRoundTrip testMethod=test_round_trip>]>
+  File "/Users/mattia/miniconda3/envs/general_ml/lib/python3.11/unittest/suite.py", line 84, in __call__
+    return self.run(*args, **kwds)
+           │    │    │       └ {}
+           │    │    └ (<unittest.runner.TextTestResult run=1 errors=0 failures=0>,)
+           │    └ <function TestSuite.run at 0x102b12ac0>
+           └ <unittest.suite.TestSuite tests=[<tests.test_tokenization_round_trip.TestTokenizationRoundTrip testMethod=test_round_trip>]>
+  File "/Users/mattia/miniconda3/envs/general_ml/lib/python3.11/unittest/suite.py", line 122, in run
+    test(result)
+    │    └ <unittest.runner.TextTestResult run=1 errors=0 failures=0>
+    └ <tests.test_tokenization_round_trip.TestTokenizationRoundTrip testMethod=test_round_trip>
+  File "/Users/mattia/miniconda3/envs/general_ml/lib/python3.11/unittest/case.py", line 678, in __call__
+    return self.run(*args, **kwds)
+           │    │    │       └ {}
+           │    │    └ (<unittest.runner.TextTestResult run=1 errors=0 failures=0>,)
+           │    └ <function TestCase.run at 0x102b0b420>
+           └ <tests.test_tokenization_round_trip.TestTokenizationRoundTrip testMethod=test_round_trip>
+  File "/Users/mattia/miniconda3/envs/general_ml/lib/python3.11/unittest/case.py", line 623, in run
+    self._callTestMethod(testMethod)
+    │    │               └ <bound method TestTokenizationRoundTrip.test_round_trip of <tests.test_tokenization_round_trip.TestTokenizationRoundTrip test...
+    │    └ <function TestCase._callTestMethod at 0x102b0b240>
+    └ <tests.test_tokenization_round_trip.TestTokenizationRoundTrip testMethod=test_round_trip>
+  File "/Users/mattia/miniconda3/envs/general_ml/lib/python3.11/unittest/case.py", line 579, in _callTestMethod
+    if method() is not None:
+       └ <bound method TestTokenizationRoundTrip.test_round_trip of <tests.test_tokenization_round_trip.TestTokenizationRoundTrip test...
+
+  File "/Users/mattia/Desktop/pleias/tok_library/tests/test_tokenization_round_trip.py", line 98, in test_round_trip
+    preprocess_data_main(USER_CONFIG['config_file_path'])
+    │                    └ {'config_file_path': '/Users/mattia/Desktop/pleias/tok_library/tests/test_config.yml', 'log_file_path': 'tests/test_log.log',...
+    └ <function preprocess_data_main at 0x12d7ea840>
+
+  File "/Users/mattia/Desktop/pleias/tok_library/src/tok_library/preprocess_data.py", line 144, in preprocess_data_main
+    preprocess_executor.run()
+    │                   └ <function LocalPipelineExecutor.run at 0x12d807c40>
+    └ <datatrove.executor.local.LocalPipelineExecutor object at 0x13d4cfc90>
+
+  File "/Users/mattia/miniconda3/envs/general_ml/lib/python3.11/site-packages/datatrove/executor/local.py", line 127, in run
+    stats.append(self._launch_run_for_rank(rank, ranks_q))
+    │     │      │    │                    │     └ <AutoProxy[Queue] object, typeid 'Queue' at 0x13c86bc10>
+    │     │      │    │                    └ 0
+    │     │      │    └ <function LocalPipelineExecutor._launch_run_for_rank at 0x12d8074c0>
+    │     │      └ <datatrove.executor.local.LocalPipelineExecutor object at 0x13d4cfc90>
+    │     └ <method 'append' of 'list' objects>
+    └ []
+  File "/Users/mattia/miniconda3/envs/general_ml/lib/python3.11/site-packages/datatrove/executor/local.py", line 76, in _launch_run_for_rank
+    return self._run_for_rank(rank, local_rank)
+           │    │             │     └ 0
+           │    │             └ 0
+           │    └ <function PipelineExecutor._run_for_rank at 0x12d807740>
+           └ <datatrove.executor.local.LocalPipelineExecutor object at 0x13d4cfc90>
+> File "/Users/mattia/miniconda3/envs/general_ml/lib/python3.11/site-packages/datatrove/executor/base.py", line 90, in _run_for_rank
+    pipelined_data = pipeline_step(pipelined_data, rank, self.world_size)
+                     │             │               │     │    └ <property object at 0x12d6930b0>
+                     │             │               │     └ <datatrove.executor.local.LocalPipelineExecutor object at 0x13d4cfc90>
+                     │             │               └ 0
+                     │             └ <generator object BaseDiskReader.run at 0x13d776240>
+                     └ 🔢 - TOKENIZER: ✍️ Writer
+  File "/Users/mattia/miniconda3/envs/general_ml/lib/python3.11/site-packages/datatrove/pipeline/base.py", line 119, in __call__
+    return self.run(data, rank, world_size)
+           │    │   │     │     └ 1
+           │    │   │     └ 0
+           │    │   └ <generator object BaseDiskReader.run at 0x13d776240>
+           │    └ <function DocumentTokenizer.run at 0x119e9cae0>
+           └ 🔢 - TOKENIZER: ✍️ Writer
+  File "/Users/mattia/miniconda3/envs/general_ml/lib/python3.11/site-packages/datatrove/pipeline/tokens/tokenizer.py", line 390, in run
+    outputfile: TokenizedFile = self.write_unshuffled(data, unshuf_filename)
+                                │    │                │     └ '00000_unshuffled.ds'
+                                │    │                └ <generator object BaseDiskReader.run at 0x13d776240>
+                                │    └ <function DocumentTokenizer.write_unshuffled at 0x119e9ca40>
+                                └ 🔢 - TOKENIZER: ✍️ Writer
+  File "/Users/mattia/miniconda3/envs/general_ml/lib/python3.11/site-packages/datatrove/pipeline/tokens/tokenizer.py", line 359, in write_unshuffled
+    for batch in batched(data, self.batch_size):
+                 │       │     │    └ 10
+                 │       │     └ 🔢 - TOKENIZER: ✍️ Writer
+                 │       └ <generator object BaseDiskReader.run at 0x13d776240>
+                 └ <function batched at 0x119e5cb80>
+  File "/Users/mattia/miniconda3/envs/general_ml/lib/python3.11/site-packages/datatrove/utils/batching.py", line 20, in batched
+    while batch := list(itertools.islice(it, n)):
+                        │         │      │   └ 10
+                        │         │      └ <generator object BaseDiskReader.run at 0x13d776240>
+                        │         └ <class 'itertools.islice'>
+                        └ <module 'itertools' (built-in)>
+  File "/Users/mattia/miniconda3/envs/general_ml/lib/python3.11/site-packages/datatrove/pipeline/readers/base.py", line 227, in run
+    raise RuntimeError(f"No files found on {self.data_folder.path}!")
+
+RuntimeError: No files found on /Users/mattia/Desktop/pleias/tok_library/data/ItalianPD_1.parquet!

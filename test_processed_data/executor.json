@@ -1,0 +1,51 @@
+{
+    "pipeline": [
+        {
+            "limit": -1,
+            "skip": 0,
+            "text_key": "text",
+            "id_key": "id",
+            "adapter": "<bound method BaseReader._default_adapter of \ud83d\udcd6 - READER: \ud83d\udcd2 Parquet>",
+            "_empty_warning": false,
+            "default_metadata": null,
+            "data_folder": "DataFolder(path='/Users/mattia/Desktop/pleias/tok_library/data/ItalianPD_1.parquet', fs=<fsspec.implementations.local.LocalFileSystem object at 0x12d651190>)",
+            "paths_file": null,
+            "recursive": true,
+            "glob_pattern": null,
+            "shuffle_files": false,
+            "file_progress": false,
+            "doc_progress": false,
+            "batch_size": 1000,
+            "read_metadata": true
+        },
+        {
+            "tokenizer_name_or_path": "/Users/mattia/Desktop/pleias/tok_library/src/tok_library/data/tokenizer/tokenizer.json",
+            "eos_token": "<|end_of_text|>",
+            "_tokenizer": null,
+            "_post_processor": null,
+            "_token_size": null,
+            "_token_format": null,
+            "output_folder": "DataFolder(path='/Users/mattia/Desktop/pleias/tok_library/test_processed_data', fs=<fsspec.implementations.local.LocalFileSystem object at 0x12d651190>)",
+            "local_working_dir": null,
+            "save_filename": null,
+            "save_loss_metadata": false,
+            "shuffle": false,
+            "batch_size": 10,
+            "rand": "Generator(PCG64)",
+            "save_final_metadata": true,
+            "upload_block_size": null,
+            "max_tokens_per_file": 300000000.0
+        }
+    ],
+    "logging_dir": "DataFolder(path='/Users/mattia/Desktop/pleias/tok_library/test_processed_data', fs=<fsspec.implementations.local.LocalFileSystem object at 0x12d651190>)",
+    "skip_completed": true,
+    "randomize_start_duration": 0,
+    "tasks": 1,
+    "workers": 1,
+    "start_method": "forkserver",
+    "local_tasks": 1,
+    "local_rank_offset": 0,
+    "depends": null,
+    "_launched": true,
+    "world_size": 1
+}
